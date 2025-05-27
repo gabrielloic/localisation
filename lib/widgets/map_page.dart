@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:localisation/widgets/card.dart';
 
 class MyMapPage extends StatefulWidget {
   const MyMapPage({super.key});
@@ -34,7 +35,6 @@ class _MyMapPageState extends State<MyMapPage> {
       _userLocation = LatLng(position.latitude, position.longitude);
     });
 
-    // Centrer la carte sur la position
     mapController?.animateCamera(CameraUpdate.newLatLng(_userLocation));
   }
 
@@ -42,18 +42,12 @@ class _MyMapPageState extends State<MyMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Carte')),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(target: _userLocation, zoom: 15),
-        onMapCreated: (GoogleMapController controller) {
-          mapController = controller;
-        },
-        markers: {
-          Marker(
-            markerId: const MarkerId('me'),
-            position: _userLocation,
-            infoWindow: const InfoWindow(title: 'Vous êtes ici'),
-          ),
-        },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: LocationCard(
+          userLocation: _userLocation,
+          onMapCreated: (controller) => mapController = controller,
+        ),
       ),
     );
   }
